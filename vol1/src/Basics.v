@@ -83,6 +83,7 @@ Inductive day : Type :=
     Having defined [day], we can write functions that operate on
     days. *)
 
+(** here is memos **)
 Definition next_weekday (d:day) : day :=
   match d with
   | monday    => tuesday
@@ -92,7 +93,7 @@ Definition next_weekday (d:day) : day :=
   | friday    => monday
   | saturday  => monday
   | sunday    => monday
-  end.
+  end. 
 
 (** One point to note is that the argument and return types of
     this function are explicitly declared.  Like most functional
@@ -252,7 +253,7 @@ Definition orb (b1:bool) (b2:bool) : bool :=
     "unit tests," which constitute a complete specification -- a truth
     table -- for the [orb] function: *)
 
-Example test_orb1:  (orb true  false) = true.
+Example test_orb1:  (orb true  false) = true.  
 Proof. simpl. reflexivity.  Qed.
 Example test_orb2:  (orb false false) = false.
 Proof. simpl. reflexivity.  Qed.
