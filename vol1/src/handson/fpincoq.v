@@ -1,0 +1,79 @@
+
+Inductive rgb: Type := 
+   red | green | blue.
+
+Inductive color: Type := 
+  black | white | primary(p: rgb). 
+
+(** sample function using rgb type *)
+Definition rgb_id(p: rgb):rgb := p.
+
+Example rgb_return_type_is_correct:
+  (** TODO:  want to focus on types, not on value *)
+  rgb_id(blue) = blue.
+Proof. simpl. reflexivity. Qed.
+
+
+(** Module *)
+
+Module Test.
+  Definition test1:color := white.
+End Test.
+
+(** MEMO: Check command asks Coq to print the type of an expression *)
+Check Test.test1.
+Compute (Test.test1).
+
+Inductive bit : Type :=
+  | B0
+  | B1.
+Inductive nybble : Type :=
+  | bits (b0  b1 b2 b3 : bit).
+
+
+Compute(bits B1 B0 B1 B0).
+
+Inductive nybble : Type :=
+  | bits (b0  b1 b2 b3 : bit).
+
+
+Compute(bits B1 B0 B1 B0).
+
+(** Own nat definition accourding to peano's law*)
+
+Inductive nat : Type := 
+  | O  
+  | S(n: nat).
+
+Check S (S O).
+Compute S O.
+
+Definition pred(n : nat) : nat := 
+  match n with
+  | O => O
+  | S p => p
+  end.
+
+ Compute pred(S O).
+
+ (** Not that the type of S is nat -> nat *) 
+Check S. 
+
+Fixpoint plus (n : nat) (m : nat) : nat :=
+  match n with
+  | O => m
+  | S n' => S (plus n' m)
+  end.
+
+Fixpoint add (x: nat)(y: nat): nat :=
+  match y with
+  | O   => x
+  | S n => add (S x) n
+  end.
+
+ Compute (add (S (S O)) (S O)).
+
+(** MEMO: using `theorem`, `forall` keywords *)
+Theorem plus_O_n : forall n : nat, plus O n = n.
+Proof.
+  intros n. simpl. reflexivity. Qed. 
