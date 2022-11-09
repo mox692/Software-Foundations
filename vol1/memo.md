@@ -10,6 +10,8 @@
 ## New Types from Old
 * 型引数を持つ型の定義
 * 依存型っぽい話題もチラついてた
+* tacticについての説明
+  * The keywords intros, simpl, and reflexivity are examples of tactics. A tactic is a command that is used between Proof and Qed to guide the process of checking some claim we are making
 
 
 

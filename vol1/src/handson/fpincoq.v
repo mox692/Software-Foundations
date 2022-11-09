@@ -33,12 +33,6 @@ Inductive nybble : Type :=
 
 Compute(bits B1 B0 B1 B0).
 
-Inductive nybble : Type :=
-  | bits (b0  b1 b2 b3 : bit).
-
-
-Compute(bits B1 B0 B1 B0).
-
 (** Own nat definition accourding to peano's law*)
 
 Inductive nat : Type := 
@@ -77,3 +71,11 @@ Fixpoint add (x: nat)(y: nat): nat :=
 Theorem plus_O_n : forall n : nat, plus O n = n.
 Proof.
   intros n. simpl. reflexivity. Qed. 
+
+
+
+
+
+
+
+
