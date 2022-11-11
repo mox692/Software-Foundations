@@ -49,15 +49,21 @@ Definition pred(n : nat) : nat :=
   | S p => p
   end.
 
-Compute pred(S O).
+Definition succ(n : nat) : nat := S n.
 
-(* pred n == n - 1 になることの証明 *)
-Theorem pred_theorem : forall p : nat , O = O.
+(* succ n == S n になることの証明 *)
+Theorem succ_theorem : forall n : nat, succ n = S n .
 Proof. simpl. reflexivity. Qed.
 
-(** Not that the type of S is nat -> nat *) 
+(* TODO: pred n == n - 1 == S n になることの証明 *)
+(* Theorem pred_theorem : forall p : nat , pred n = S n. *)
+(* Proof. simpl. reflexivity. Qed. *)
+
+(** Note that the type of S is nat -> nat *) 
 Check S. 
 
+
+(* MEMO: 再起的な関数を定義する場合 *)
 Fixpoint plus (n : nat) (m : nat) : nat :=
   match n with
   | O => m
@@ -70,13 +76,37 @@ Fixpoint add (x: nat)(y: nat): nat :=
   | S n => add (S x) n
   end.
 
+(* 4 - 2 *)
+Fixpoint minus (n : nat)(m : nat) : nat := 
+  match m with
+  | O    => n
+  | S n' =>
+    match n with 
+    | O     => O
+    | S n'' => minus n'' n'
+    end
+  end.
+
+(* minusに関する定理 *)
+Example minus_theorem:
+  minus (S (S O)) (S O) = S O.
+
+Proof. simpl. reflexivity. Qed.
+
+(* + 演算子の定義 *)
+Notation "x + y" := (plus x y)
+                      (at level 50, left associativity)
+                      : nat_scope.
+
+(* + 演算子とplus の間に成り立つ定理 *)
+Theorem plus_and_plus_operator: forall x y : nat,
+  x + y = plus x y.
+
+Proof. simpl. reflexivity. Qed.
+
+
+Theorem succ_theorem : forall n : nat, succ n = S n .
  Compute (add (S (S O)) (S O)).
-
-(** MEMO: using `theorem`, `forall` keywords *)
-Theorem plus_O_n : forall n : nat, plus O n = n.
-Proof.
-  intros n. simpl. reflexivity. Qed. 
-
 
 
 
