@@ -5,37 +5,36 @@ Inductive rgb: Type :=
 Inductive color: Type := 
   black | white | primary(p: rgb). 
 
-(* id for rgb *)
+(** sample function using rgb type *)
 Definition rgb_id(p: rgb):rgb := p.
 
 Example rgb_return_type_is_correct:
+  (** TODO:  want to focus on types, not on value *)
   rgb_id(blue) = blue.
 Proof. simpl. reflexivity. Qed.
 
-(* 上の定理を全てのrgbに適用した定理 *)
-Theorem rgb_id_returns_rgb_type : forall c : rgb, rgb_id(c) = c.
-Proof. simpl. reflexivity. Qed.
 
 (** Module *)
+
 Module Test.
   Definition test1:color := white.
 End Test.
 
-(* MEMO: CheckコマンドとComputeコマンド *)
+(** MEMO: Check command asks Coq to print the type of an expression *)
 Check Test.test1.
 Compute (Test.test1).
 
 Inductive bit : Type :=
   | B0
   | B1.
-
 Inductive nybble : Type :=
   | bits (b0  b1 b2 b3 : bit).
 
+
 Compute(bits B1 B0 B1 B0).
 
+(** Own nat definition accourding to peano's law*)
 
-(* ペアノの公理に基づいた、自然数の実装 *)
 Inductive nat : Type := 
   | O  
   | S(n: nat).
@@ -49,13 +48,9 @@ Definition pred(n : nat) : nat :=
   | S p => p
   end.
 
-Compute pred(S O).
+ Compute pred(S O).
 
-(* pred n == n - 1 になることの証明 *)
-Theorem pred_theorem : forall p : nat , O = O.
-Proof. simpl. reflexivity. Qed.
-
-(** Not that the type of S is nat -> nat *) 
+ (** Not that the type of S is nat -> nat *) 
 Check S. 
 
 Fixpoint plus (n : nat) (m : nat) : nat :=
@@ -77,7 +72,7 @@ Theorem plus_O_n : forall n : nat, plus O n = n.
 Proof.
   intros n. simpl. reflexivity. Qed. 
 
-
+   
 
 
 
