@@ -76,7 +76,6 @@ Fixpoint add (x: nat)(y: nat): nat :=
   | S n => add (S x) n
   end.
 
-(* 4 - 2 *)
 Fixpoint minus (n : nat)(m : nat) : nat := 
   match m with
   | O    => n
@@ -86,6 +85,18 @@ Fixpoint minus (n : nat)(m : nat) : nat :=
     | S n'' => minus n'' n'
     end
   end.
+
+
+Fixpoint multi_with_state(n : nat)(m : nat)(sum : nat) : nat :=
+  match m with
+  | O => sum
+  | S m' => multi_with_state n m' (add sum n)
+  end.
+
+(* 掛け算の定義 *)
+Definition multiple (n : nat)(m : nat) : nat := multi_with_state n m O.
+
+Compute multiple  (S (S (S (S O)))) (S (S O)).
 
 (* minusに関する定理 *)
 Example minus_theorem:
@@ -98,15 +109,81 @@ Notation "x + y" := (plus x y)
                       (at level 50, left associativity)
                       : nat_scope.
 
+Notation "x - y" := (minus x y)
+                      (at level 50, left associativity)
+                      : nat_scope.
+
+Notation "x * y" := (multiple x y)
+                      (at level 40, left associativity)
+                      : nat_scope.
+
 (* + 演算子とplus の間に成り立つ定理 *)
 Theorem plus_and_plus_operator: forall x y : nat,
   x + y = plus x y.
-
 Proof. simpl. reflexivity. Qed.
 
+(* - 演算子と minus の間に成り立つ定理 *)
+Theorem minus_and_minus_operator: forall x y : nat,
+  x - y = minus x y.
+Proof. simpl. reflexivity. Qed.
 
-Theorem succ_theorem : forall n : nat, succ n = S n .
- Compute (add (S (S O)) (S O)).
+(* Proof by Simplification *)
+
+(* TODO: intros キーワードは、ゴールの量詞nを仮定に持ってくるものらしい？ *)
+Theorem plus_O_n'' : forall n : nat, O + n = n.
+Proof.
+  intros. simpl. reflexivity. Qed.
+
+
+
+(* Proof by Rewriting *)
+Theorem plus_id_example : forall n m:nat,
+  n = m ->
+  n + n = m + m.
+
+
+Proof.
+  (* move both quantifiers into the context: *)
+  intros n m.
+  (* move the hypothesis into the context: *)
+  intros H.
+  (* rewrite the goal using the hypothesis: *)
+  rewrite -> H.
+  reflexivity. Qed.
+
+
+
+
+
+
+(* 
+  Exercise
+*)
+
+(* Exercise 1 *)
+Fixpoint factory(n : nat): nat := 
+  match n with
+  | O   => S O
+  | S n' => multiple n (factory n')
+  end.
+
+(* 1 star, standard (plus_id_exercise) *)
+Theorem plus_id_exercise : forall n m o : nat,
+  n = m -> m = o -> n + m = m + o.
+Proof.
+  intros n m o.
+  intros H1.
+  intros H2.
+  rewrite -> H1.
+  rewrite -> H2.
+  reflexivity.
+  Qed.
+
+
+
+
+
+
 
 
 
