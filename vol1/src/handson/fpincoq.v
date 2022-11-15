@@ -1,4 +1,8 @@
 
+
+
+
+
 Inductive rgb: Type := 
    red | green | blue.
 
@@ -104,12 +108,37 @@ Theorem plus_and_plus_operator: forall x y : nat,
 
 Proof. simpl. reflexivity. Qed.
 
+(*
+  Proof by Case Analysis 
+*)
+Fixpoint eqb (n m : nat) : bool :=
+  match n with
+  | O => match m with
+         | O => true
+         | S m' => false
+         end
+  | S n' => match m with
+            | O => false
+            | S m' => eqb n' m'
+            end
+  end.
 
-Theorem succ_theorem : forall n : nat, succ n = S n .
- Compute (add (S (S O)) (S O)).
+Notation "x =? y" := (eqb x y) (at level 70) : nat_scope.
 
+Compute  (S O) =? (S O).
+Theorem plus_1_neq_0_firsttry : forall n : nat,
+  (n + O) =? O = false.
+Proof.
+  intros n.
+  simpl.
+Abort.
 
-
+Theorem plus_1_neq_0 : forall n : nat,
+  (n + 1) =? 0 = false.
+Proof.
+  intros n. destruct n as [| n'] eqn:E.
+  - reflexivity.
+  - reflexivity. Qed.
 
 
 
