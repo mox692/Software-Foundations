@@ -134,11 +134,46 @@ Proof.
 Abort.
 
 Theorem plus_1_neq_0 : forall n : nat,
-  (n + 1) =? 0 = false.
+  (n + S O) =? O = false.
 Proof.
+  (* MEMO: desctruct の動きに注目 *)
   intros n. destruct n as [| n'] eqn:E.
   - reflexivity.
   - reflexivity. Qed.
 
 
+Definition negb(b : bool): bool := 
+  match b with
+  | true => false
+  | false => true
+  end.
+
+Theorem negb_involutive: forall b : bool,
+  negb(negb(b)) = b.
+Proof.
+  (* MEMO: bool型に対するdesctruct の動きに注目 *)
+  intros b. destruct b eqn:E.
+  - reflexivity.
+  - reflexivity. Qed.
+
+Definition andb(x :bool)(y: bool) : bool := 
+  match x with
+  | false => false
+  | true  => match y with
+             | false => false
+             | true  => true
+             end
+  end.
+
+Theorem andb_commutative : forall b c,
+  andb b c = andb c b.
+Proof.
+intros b c. destruct b eqn:Eb.
+- destruct c eqn:Ec. simpl.
+  + reflexivity.
+  + reflexivity.
+- destruct c eqn:Ec. simpl.
+  + reflexivity.
+  + reflexivity.
+Qed.
 
