@@ -205,33 +205,82 @@ Qed.
 (* simplが使える証明. simplが何をしている？ *)
 Theorem plus_1_n : forall n : nat, O + n = n.
 Proof.
-  intros n. cbv delta. cbv iota. cbv beta. simpl. reflexivity. Qed.
-
+  intros n.
+  (* TODO: ここの前後で起こっていること *)
+  simpl.
+  reflexivity.
+  Qed.
 
 Theorem plus_1_l : forall n:nat, (S O) + n = S n.
 Proof.
-  intros n. simpl. reflexivity. Qed.
+  intros n.
+  (* TODO: ここの前後で起こっていること *)
+  simpl.
+  reflexivity.
+  Qed.
 
+(******************************)
+(** * Proof by re-writing     *)
+(******************************)
 
+(* MEMO: -> でならばを行っている *)
+Theorem plus_id_example : forall n m : nat,
+  n = m -> n + m = m + m.
+Proof.
+  intros n m.
+  intros h.
+  rewrite -> h.
+  reflexivity.
+  Qed.
 
+Theorem plus_example_2 : forall n m : nat,
+  n = S m  -> pred n = m.
+Proof.
+  intros n m.
+  intros h.
+  rewrite -> h.
+  simpl.
+  reflexivity.
+  Qed.
 
+(* すでに証明したTheoremをrewriteに食わせて使う. *)
+Theorem mult_n_O : forall n : nat,
+  n * O = O.
+Proof.
+  intros.
+  (* TODO: これがなぜうまくいく？？ *)
+  cbv delta beta iota .
+  reflexivity.
+  Qed.
 
+(* 上の 定理を、証明中に使用する. *)
+Theorem mult_n_0_m_0 : forall p q : nat,
+  (p * O) + (q * O) = O.
+Proof.
+  intros.
+  rewrite -> mult_n_O.
+  rewrite -> mult_n_O.
+  simpl.
+  reflexivity.
+  Qed.
 
+Theorem mult_n_Sm : forall n m : nat,
+  n * m + n = n * (S m).
+Proof.
+  intros.
+  (* TODO: prove. *)
+  Admitted.
 
-
-
-
-
-
-
-  Eval cbv beta in ((S O) + O).
-  Check ((fun x y => x + y) (S O) ).
-  Eval cbv beta in ((fun x y => x + y) (S O) O).
-  Eval cbv in ((fun x y => x + y) (S O) O).
-  Check ((S O) + O).
-
-
-
+(** Exercise: 1 star, standard (mult_n_1) *)
+Theorem mult_n_1 : forall n : nat,
+  n * (S O) = n.
+Proof.
+  intros.
+  rewrite <- mult_n_Sm.
+  rewrite -> mult_n_O.
+  simpl.
+  reflexivity.
+  Qed.
 
 
 
