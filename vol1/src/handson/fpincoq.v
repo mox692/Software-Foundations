@@ -286,4 +286,77 @@ Proof.
 (** * Proof by case-analysis  *)
 (******************************)
 
+Theorem plus_1_neq_0_firsttry : forall n : nat,
+  (n + S O) =? O = false.
+Proof.
+  intros n.
+  (* MEMO: + の1つめの引数であるnが、どういうものかCoqが判別できないため.
+  [n + S O]はそれ以上簡約できない項であru *)
+  simpl. 
+Abort.
 
+Theorem plus_1_neq_0_firsttry : forall n : nat,
+  (n + S O) =? O = false.
+Proof.
+  intros n.
+  destruct n as [| n''].
+  (* TODO: simplを使わないように書き直す *)
+  * simpl.
+    reflexivity.
+  * simpl.
+    reflexivity.
+  Qed.
+
+Theorem negb_involutive2 : forall b : bool,
+  negb (negb b) = b.
+Proof.
+  intros.
+  destruct b.
+  * simpl.
+    reflexivity.
+  * simpl.
+    reflexivity.
+  Qed.
+
+
+(* Exercise: 2 stars, standard (andb_true_elim2) *)
+Theorem andb_true_elim2 : 
+  forall b c : bool,
+  andb b c = true -> c = true.
+Proof.
+  intros b c.
+  intros H.
+  destruct b.
+  - rewrite <- H.
+    destruct c.
+    * simpl.
+      reflexivity.
+    * reflexivity.
+  - rewrite <- H. 
+    destruct c.
+    * simpl.
+      rewrite <- H.
+      reflexivity.
+    * simpl.
+      reflexivity.
+  Qed.
+    
+(* Another answear *)
+Theorem andb_true_elim2_another : 
+  forall b c : bool,
+  andb b c = true -> c = true.
+Proof.
+  intros b c.
+  intros H.
+  destruct b.
+  - destruct c.
+    * rewrite <- H.
+      reflexivity. 
+    * rewrite <- H. 
+      reflexivity.
+  - destruct c.
+    * rewrite <- H.
+      reflexivity. 
+    * rewrite <- H. 
+      reflexivity.
+  Qed.
