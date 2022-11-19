@@ -360,3 +360,17 @@ Proof.
     * rewrite <- H. 
       reflexivity.
   Qed.
+
+Theorem zero_nbeq_plus_1 : forall n : nat,
+  O =? (n + (S O)) = false.
+Proof.
+  intros n.
+  destruct n.
+  * simpl. 
+    reflexivity.
+  * simpl.
+    reflexivity.
+  Qed.
+
+
+  
