@@ -1,4 +1,8 @@
 
+
+
+
+
 Inductive rgb: Type := 
    red | green | blue.
 
@@ -127,66 +131,72 @@ Theorem minus_and_minus_operator: forall x y : nat,
   x - y = minus x y.
 Proof. simpl. reflexivity. Qed.
 
-(* Proof by Simplification *)
-
-(* TODO: intros キーワードは、ゴールの量詞nを仮定に持ってくるものらしい？ *)
-Theorem plus_O_n'' : forall n : nat, O + n = n.
-Proof.
-  intros. simpl. reflexivity. Qed.
-
-
-
-(* Proof by Rewriting *)
-Theorem plus_id_example : forall n m:nat,
-  n = m ->
-  n + n = m + m.
-
-
-Proof.
-  (* move both quantifiers into the context: *)
-  intros n m.
-  (* move the hypothesis into the context: *)
-  intros H.
-  (* rewrite the goal using the hypothesis: *)
-  rewrite -> H.
-  reflexivity. Qed.
-
-
-
-
-
-
-(* 
-  Exercise
+(*
+  Proof by Case Analysis 
 *)
-
-(* Exercise 1 *)
-Fixpoint factory(n : nat): nat := 
+Fixpoint eqb (n m : nat) : bool :=
   match n with
-  | O   => S O
-  | S n' => multiple n (factory n')
+  | O => match m with
+         | O => true
+         | S m' => false
+         end
+  | S n' => match m with
+            | O => false
+            | S m' => eqb n' m'
+            end
   end.
 
-(* 1 star, standard (plus_id_exercise) *)
-Theorem plus_id_exercise : forall n m o : nat,
-  n = m -> m = o -> n + m = m + o.
+Notation "x =? y" := (eqb x y) (at level 70) : nat_scope.
+
+Compute  (S O) =? (S O).
+Theorem plus_1_neq_0_firsttry : forall n : nat,
+  (n + O) =? O = false.
 Proof.
-  intros n m o.
-  intros H1.
-  intros H2.
-  rewrite -> H1.
-  rewrite -> H2.
-  reflexivity.
-  Qed.
+  intros n.
+  simpl.
+Abort.
+
+Theorem plus_1_neq_0 : forall n : nat,
+  (n + S O) =? O = false.
+Proof.
+  (* MEMO: desctruct の動きに注目 *)
+  intros n. destruct n as [| n'] eqn:E.
+  - reflexivity.
+  - reflexivity. Qed.
 
 
+Definition negb(b : bool): bool := 
+  match b with
+  | true => false
+  | false => true
+  end.
 
+Theorem negb_involutive: forall b : bool,
+  negb(negb(b)) = b.
+Proof.
+  (* MEMO: bool型に対するdesctruct の動きに注目 *)
+  intros b. destruct b eqn:E.
+  - reflexivity.
+  - reflexivity. Qed.
 
+Definition andb(x :bool)(y: bool) : bool := 
+  match x with
+  | false => false
+  | true  => match y with
+             | false => false
+             | true  => true
+             end
+  end.
 
-
-
-
-
-
-
+Theorem andb_commutative : forall b c,
+  andb b c = andb c b.
+Proof.
+intros b c. destruct b eqn:Eb.
+- destruct c eqn:Ec. simpl.
+  + reflexivity.
+  + reflexivity.
+- destruct c eqn:Ec. simpl.
+  + reflexivity.
+  + reflexivity.
+Qed.
 
