@@ -1,8 +1,6 @@
-
-
-
-
-
+(*********************)
+(** * Basic intro    *)
+(*********************)
 Inductive rgb: Type := 
    red | green | blue.
 
@@ -199,4 +197,42 @@ intros b c. destruct b eqn:Eb.
   + reflexivity.
   + reflexivity.
 Qed.
+
+(******************************)
+(** * Proof by simplification *)
+(******************************)
+
+(* simplが使える証明. simplが何をしている？ *)
+Theorem plus_1_n : forall n : nat, O + n = n.
+Proof.
+  intros n. cbv delta. cbv iota. cbv beta. simpl. reflexivity. Qed.
+
+
+Theorem plus_1_l : forall n:nat, (S O) + n = S n.
+Proof.
+  intros n. simpl. reflexivity. Qed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+  Eval cbv beta in ((S O) + O).
+  Check ((fun x y => x + y) (S O) ).
+  Eval cbv beta in ((fun x y => x + y) (S O) O).
+  Eval cbv in ((fun x y => x + y) (S O) O).
+  Check ((S O) + O).
+
+
+
+
+
+
 

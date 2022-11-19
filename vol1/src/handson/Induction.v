@@ -1063,3 +1063,10 @@ Proof.
   - (* n = 0 *) reflexivity.
   - (* n = S n' *) simpl. rewrite -> IHn'. reflexivity. Qed.
 
+
+  Check (1 + 2).
+  Eval cbv beta in (1 + 2).
+  Eval cbv delta in (1 + 2).
+  Eval cbv beta delta in (1 + 2).
+  Eval cbv delta iota in (1 + 2).
+  Eval cbv beta delta iota in (1 + 2).
