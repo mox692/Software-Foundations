@@ -1069,17 +1069,95 @@ Proof.
   * (* Stack!! *) 
     Abort.
 
+(* TODO: 上の例との違いをよく観察する *)
 Theorem add_0_r_firsttry : forall n:nat,
   n + O = n.
 Proof.
   intros n.
-  induction n.
+  induction n as [| n' IHn'].
   * reflexivity.
   * simpl. (* TODO: ここの 書き換えがどうしてかのうなのか？*)
+    rewrite -> IHn'.
+    reflexivity.
+  Qed.
+
+Theorem minus_n_n : forall n,
+  minus n n = 0.   
+Proof.
+  intros.
+  induction n.
+  * reflexivity.
+  * simpl. 
+    rewrite -> IHn.
+    reflexivity.
+  Qed.
+      
+Theorem mul_0_r : forall n:nat,
+  n * 0 = 0.
+Proof.
+  intros.
+  induction n as [| n' Hn'].
+  * reflexivity.
+  * simpl. (* TODO: ここの変形がなんでできるのかが謎 *)
+    rewrite -> Hn'.
+    reflexivity.
+  Qed.
+    
+Theorem plus_n_Sm : forall n m : nat,
+  S (n + m) = n + (S m).
+Proof.
+  intros n m.
+  induction n.
+  * simpl.
+    reflexivity.
+  * simpl. 
     rewrite -> IHn.
     reflexivity.
   Qed.
 
-    
+Theorem add_comm : forall n m : nat,
+  n + m = m + n.
+Proof.
+  intros n m.
+  induction n.
+  * simpl. 
+    rewrite -> add_0_r_firsttry.
+    reflexivity.
+  * simpl.  
+    rewrite -> IHn.
+    rewrite -> plus_n_Sm.
+    reflexivity.
+  Qed.
 
+(******************************)
+(** * Proofs Within Proofs    *)
+(******************************)
+Theorem mult_0_plus' : forall n m : nat,
+  (n + 0 + 0) * m = n * m.
+Proof.
+  intros n m.
+  assert (H: n + 0 + 0 = n). (* MEMO: 証明したい命題自身と、assertの中に書いたsub命題の2つがGoalに設定される *)
+  { 
+    induction n.
+    - reflexivity.
+    - simpl. 
+      rewrite -> IHn.
+      reflexivity.
+  }
+  * rewrite -> H.
+    reflexivity.
+  Qed.
 
+Theorem plus_rearrange_firsttry : forall n m p q : nat,
+  (n + m) + (p + q) = (m + n) + (p + q).
+Proof.
+  intros n m p q.
+  (* MEMO: ここで、 n + m = m + n を証明したい、と感じる *)
+  assert (H: n + m = m + n).
+  {
+    rewrite -> add_comm. 
+    reflexivity.
+  }
+  rewrite -> H.
+  reflexivity.
+  Qed.
