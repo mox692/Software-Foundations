@@ -1057,16 +1057,29 @@
 
 (* ここから記述 *)
 
-Theorem add_0_r : forall n:nat, n + 0 = n.
+(******************************)
+(** * Proof by Induction      *)
+(******************************)
+Theorem add_0_r_firsttry : forall n:nat,
+  n + O = n.
 Proof.
-  intros n. induction n as [| n' IHn'].
-  - (* n = 0 *) reflexivity.
-  - (* n = S n' *) simpl. rewrite -> IHn'. reflexivity. Qed.
+  intros n.
+  destruct n.
+  * reflexivity.
+  * (* Stack!! *) 
+    Abort.
+
+Theorem add_0_r_firsttry : forall n:nat,
+  n + O = n.
+Proof.
+  intros n.
+  induction n.
+  * reflexivity.
+  * simpl. (* TODO: ここの 書き換えがどうしてかのうなのか？*)
+    rewrite -> IHn.
+    reflexivity.
+  Qed.
+
+    
 
 
-  Check (1 + 2).
-  Eval cbv beta in (1 + 2).
-  Eval cbv delta in (1 + 2).
-  Eval cbv beta delta in (1 + 2).
-  Eval cbv delta iota in (1 + 2).
-  Eval cbv beta delta iota in (1 + 2).
