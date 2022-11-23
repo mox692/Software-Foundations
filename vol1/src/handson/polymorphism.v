@@ -3581,8 +3581,20 @@ Check Cons'.
 Fixpoint repeat'(X : Type)(x : X)(times : nat) : list X :=
     match times with
     | 0    => Nil' X
-    | S n' => Cons' X x (repeat'(X)(x)(n'))
+    | S n' => Cons' X x (repeat' X x n')
     end
 .
 
-Compute repeat'(nat)(7)(3).
+Fixpoint app {X : Type} (l1 l2 : list X) : list X :=
+  match l1 with
+  | Nil' _  => l2
+  | Cons' X h t => Cons' h (app t l2)
+  end.
+
+Fixpoint rev'(X: Type)(l : list X): list X := match l with 
+    | Nil' _ => Nil' _
+    | Cons' _ h t => (rev'(_)(t)) ++ [h]
+    end
+.
+
+Check Nil' nat.
