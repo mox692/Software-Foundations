@@ -1238,9 +1238,23 @@ Proof.
       reflexivity.
     * simpl. 
       reflexivity.
+    Qed.
 
-
-
+(******************************)
+(** * Induction on Lists      *)
+(******************************)
+(* listの連結の結合ほうそく. *)
+Theorem app_assoc : forall l1 l2 l3 : natlist,
+  (l1 ++ l2) ++ l3 = l1 ++ (l2 ++ l3).
+Proof.
+  intros.
+  induction l1.
+  * simpl.
+    reflexivity.
+  * simpl.
+    rewrite -> IHl1.
+    reflexivity.
+  Qed.
 
 
 
