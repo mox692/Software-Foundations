@@ -1257,7 +1257,50 @@ Proof.
   Qed.
 
 
+Fixpoint rev (l:natlist) : natlist :=
+  match l with
+  | nil => nil
+  | h :: t => rev t ++ cons(h)(nil)
+  end.
 
+Theorem list_len : forall a b : natlist,
+  length (a ++ b) = length a + length b.
+Proof.
+  intros a b.
+  induction a as [| ha ta IHl'].
+  * simpl.
+    reflexivity.
+  * simpl. 
+    rewrite -> IHl'.
+    reflexivity.
+  Qed.
+
+Theorem nat_plus_one : forall n : nat,
+  S n = n + 1.
+Proof.
+  intros n.
+  induction n as [| n' IHl'].
+  * reflexivity.
+  * simpl. 
+    rewrite -> IHl'.
+    reflexivity.
+  Qed.
+
+(* 補助定理が2つも必要になるとは... *)
+Theorem rev_not_change_length : forall l : natlist,
+  length l = length (rev l).
+Proof.
+  intro l.
+  induction l as [| n l' IHl'].
+  * simpl.
+    reflexivity.
+  * simpl.
+    rewrite -> list_len .
+    simpl.
+    rewrite -> IHl'.
+    rewrite <- nat_plus_one.
+    reflexivity.
+  Qed.
 
 
 
