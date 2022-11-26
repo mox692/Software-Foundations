@@ -1,5 +1,5 @@
 {
-    "coqtop.binPath": "/Applications/Coq-Platform~8.15~2022.04.app/Contents/Resources/bin", // specify the path to coqtop (e.g. "path/to/coq/bin/")
+    "coqtop.binPath": "/Users/kimuramotoyuki/.opam/4.11.1/bin",
     "coqtop.args": [], // an array of strings specifying additional command line arguments for coqtop
     "coqtop.loadCoqProject": true, // set to false to ignore _CoqProject
     "coqtop.coqProjectRoot": "./"

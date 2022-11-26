@@ -1,3 +1,4 @@
+From LF Require Export Lists.
 (* ここから *)
 
 Inductive list(X: Type) :=
@@ -76,3 +77,140 @@ Fixpoint length {X : Type} (l : list X) : nat :=
 
 Check length (cons nat 3 (nil nat)).
 Check length (cons _ 3 (nil _)).
+
+
+Arguments nil {X}.
+Arguments cons {X}.
+(* Arguments repeat {X}. *)
+
+Fail Definition mynil := nil.
+Definition mynil : list nat := nil.
+Definition mynil' := @nil nat.
+Notation "x :: y" := (cons x y)
+                     (at level 60, right associativity).
+Notation "[ ]" := nil.
+Notation "[ x ; .. ; y ]" := (cons x .. (cons y []) ..).
+Notation "x ++ y" := (app x y)
+                     (at level 60, right associativity).
+
+(** Exercise: 2 stars, standard (poly_exercises) *)
+Theorem app_nil_r : forall (X:Type), forall l:list X,
+  l ++ [] = l.
+Proof.
+  intros X l.
+  induction l.
+  * reflexivity. 
+  * simpl. 
+    rewrite -> IHl.
+    reflexivity.
+  Qed.
+
+(* simpl. が仕事しすぎていて何をしているのかわからん *)
+Theorem app_assoc : forall A (l m n:list A),
+  l ++ m ++ n = (l ++ m) ++ n.
+Proof.
+  intros A l m n.
+  induction l.
+  * simpl.
+    reflexivity.
+  * simpl. 
+    rewrite -> IHl.
+    reflexivity.
+  Qed.
+
+(* Polymorphic Pairs *)
+Inductive prod(X Y: Type) : Type :=
+  pair(x : X)(y : Y).
+
+(* example *)
+Compute pair nat bool 4 false.
+
+Arguments pair {X} {Y}.
+
+(* 上のArguments の効果 *)
+Compute pair 3 false.
+
+Notation "( x , y )" := (pair x y).
+Notation "X * Y" := (prod X Y) : type_scope.
+
+Compute (4, false).
+
+Definition fst(X : Type)(Y : Type)(v : prod X Y) : X :=
+  match v with
+  | pair x y => x
+  end
+.
+
+Definition fst2{X Y : Type}(v : prod X Y) : X :=
+  match v with
+  | pair x y => x
+  end
+.
+
+Definition snd(X : Type)(Y : Type)(v : prod X Y) : Y :=
+  match v with
+  | pair x y => y
+  end
+.
+
+Definition snd2{X Y : Type}(v : prod X Y) : Y :=
+  match v with
+  | pair x y => y
+  end
+.
+
+Compute fst nat nat (3, 4).
+Compute fst2 (3, 4).
+Compute snd nat bool (4, false).
+
+Fixpoint zip(X : Type)(Y : Type)(l1 : list X)(l2 : list Y): list (prod X Y) :=
+  match l1 with
+  | nil => nil
+  | cons h t =>
+    match l2 with
+    | nil => nil
+    | cons h' t' => (h, h') :: zip X Y t t'
+    end
+  end
+.
+
+Compute zip nat nat [1;2;3] [4;5;6].
+
+(* Polymorphic Options *)
+Inductive option(X : Type) : Type :=
+  | none
+  | some(x : X)
+  .
+
+Arguments some {X}.
+Arguments none {X}.
+
+Definition headOption{X : Type}(l : list X) : option X :=
+    match l with
+    | nil => none
+    | cons h t => some h
+    end
+.
+
+Compute headOption (cons 3 nil).
+Compute headOption nil.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
