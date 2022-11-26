@@ -195,6 +195,44 @@ Definition headOption{X : Type}(l : list X) : option X :=
 Compute headOption (cons 3 nil).
 Compute headOption nil.
 
+(* Functions as Data *)
+Definition double(n : nat) : nat := n * 2.
+Definition do3times{A : Type}(a : A)(f: A -> A) : A := f (f (f a)).
+
+
+(* Filter *)
+Fixpoint filter{X : Type}(l : list X)(f : X -> bool) : list X :=
+  match l with
+  | nil => l
+  | cons h t =>
+    match (f h) with
+      | true => cons h (filter t f)
+      | false => filter t f
+    end
+  end
+.
+
+Fixpoint is_odd(n : nat) : bool :=
+  match n with
+  | O => false
+  | S O => true
+  | S n' => is_odd(n' - 1)
+  end
+.
+
+Compute filter([1;2;3])(is_odd).
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
