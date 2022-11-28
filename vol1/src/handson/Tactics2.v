@@ -196,9 +196,122 @@ Proof.
       (* apply le_trans with (a := (S n)) (b := (S m)) (c := o). *)
 
 
+(* Unfolding Definitions *)
+Definition square n := n * n.
+
+Lemma square_mult : forall n m,
+  square (n * m) = square n * square m.
+Proof.
+  intros n m.
+  simpl.
+  (* MEMO: unfold  *)
+  unfold square.
+  (* TODO: 矢印ないrewriteとかあるんや *)
+  rewrite mult_assoc.
+  assert (H : n * m * n = n * n * m).
+  {
+    rewrite mul_comm.
+    (* MEMO: カッコを外したい時にこの定理が使えそう *)
+    apply mult_assoc. 
+  }
+  rewrite -> H.
+  rewrite mult_assoc.
+  reflexivity.
+  Qed.
+
+Definition bar x :=
+  match x with
+  | O | _ => 5
+  end
+.
+Fact silly_fact_2 : forall m,
+  bar m + 1 = bar (m + 1) + 1.
+Proof.
+  intros m.
+  (* unfoldをすることで、match m ... のところでstackしていることに気づく！！ *)
+  unfold bar.
+  destruct m.
+  * simpl.
+    reflexivity.
+  * simpl.
+    reflexivity.
+  Qed.
 
 
+(* Using destruct on Compound Expressions *)
+Definition sillyfun (n : nat) : bool :=
+  (* MEMO: このif-then-elseはcoq組み込みのものか. *)
+  if n =? 3 then false
+  else if n =? 5 then false
+  else false.
+Theorem sillyfun_false : forall (n : nat),
+  sillyfun n = false.
+Proof.
+  intros n.
+  unfold sillyfun.
+  (* MEMO: (n =? 3) という bool値 に対してdestructをおこなっている!! *)
+  destruct (n =? 3) eqn:E1.
+  * reflexivity.
+  * destruct (n =? 5) eqn:E2. 
+    - reflexivity.
+    - reflexivity.
+  Qed.
 
+Fixpoint split {X Y : Type} (l : list (X*Y)) : (list X) * (list Y) :=
+  match l with
+  | [] => ([], [])
+  | (x, y) :: t =>
+    match split t with
+    | (lx, ly) => (x :: lx, y :: ly)
+    end
+  end
+.
+
+Compute split [(1,2); (3,4); (5,6)].
+Compute combine [1;3;5] [2;4;6].
+
+Theorem combine_split : forall X Y (l : list (X * Y)) l1 l2,
+  split l = (l1, l2) ->
+  combine l1 l2 = l.
+Proof.
+  intros X Y l.
+  induction l.
+  * intros l1 l2 H.
+    simpl in H.
+    injection H as H1 H2.
+    rewrite <- H1.
+    rewrite <- H2.
+    reflexivity.
+  * destruct x as (x, y).
+    destruct l1 as [| x'].
+    + intros l2 H.
+      simpl in H.
+      destruct  (split l) in H.
+      discriminate H.
+    + destruct l2 as [| y'].
+      - intros H.
+        simpl in H.
+        destruct (split l) in H.
+        discriminate H.
+      - intros H.
+        simpl.
+        assert (G: split l = (l1, l2)). {
+          simpl in H.
+          destruct (split l).
+          injection H as H.
+          rewrite -> H0.
+          rewrite -> H2.
+          reflexivity.
+        }
+        apply IHl in G.
+        simpl in H.
+        destruct (split l) in H.
+        injection H as H.
+        rewrite -> G.
+        rewrite <- H.
+        rewrite <- H1.
+        reflexivity.
+Qed.
 
 
 
