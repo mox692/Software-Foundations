@@ -29,4 +29,17 @@ Proof.
   - induction m in H1. (* MEMO: ここで分解した時に、若干の簡略化がなされている？ どっちも nが0のパターン飲みかも *)
     simpl in H1.
     * apply H1.
-    * 
+      Abort.
+      (* TODO: solve *)
+
+Lemma and_exercise2 : forall n m : nat,
+  n = 0 /\ m = 0 -> m + n = 0.
+Proof.
+  intros n m H1.
+  destruct H1. (* MEMO: 仮定に conjunctive な命題があった場合は destruct で崩す *)
+  rewrite -> H.
+  rewrite -> H0.
+  reflexivity.
+  Qed.
+
+
