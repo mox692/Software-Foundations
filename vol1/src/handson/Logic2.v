@@ -93,7 +93,7 @@ Proof.
   destruct H.
   Qed.
 
- (* MEMO: この証明の意味がよくわからん *)
+ (* MEMO: この証明のdestructの挙動がよくわからん *)
 Theorem not_implies_our_not : forall (P:Prop),
   not P -> (forall (Q:Prop), P -> Q).
 Proof.
@@ -111,6 +111,46 @@ Proof.
   intros contra.
   (* MEMO: discriminate についての復讐 ( https://softwarefoundations.cis.upenn.edu/lf-current/Tactics.html#:~:text=These%20examples%20are%20instances%20of%20a%20logical%20principle%20known%20as%20the%20principle%20of%20explosion%2C%20which%20asserts%20that%20a%20contradictory%20hypothesis%20entails%20anything%20(even%20manifestly%20false%20things!). ) *)
   discriminate contra.
+  Qed.
+
+Theorem not_False :
+  not False.
+Proof.
+  unfold not.
+  intros H1.
+  destruct H1. (* MEMO: False を destruct すると、どんな結論でも導けるようになる？ *)
+  Qed.
+
+Theorem contradiction_implies_anything : forall P Q : Prop,
+  (P /\ not P) -> Q.
+Proof.
+  (* MEMO: [] で /\ の 2つのPropを展開できることに注目 *)
+  intros P Q [H0 H1].
+  unfold not in H1.
+  apply H1 in H0.
+  destruct H0.
+  Qed.
+
+
+(* Truth *)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
